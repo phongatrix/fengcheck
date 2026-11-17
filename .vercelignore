@@ -1,0 +1,3 @@
+# .vercelignore — file hiện diện (chỉ chứa chú thích) để Vercel CLI KHÔNG áp
+# .gitignore khi upload: cần đưa public/backup/ lên bản deploy để app tự
+# phục hồi dữ liệu lần đầu truy cập.

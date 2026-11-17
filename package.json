@@ -1,0 +1,40 @@
+{
+  "name": "cham-thi-webcam",
+  "version": "1.0.0.57",
+  "private": true,
+  "description": "Chấm thi OMR bằng webcam — chụp phiếu bài thi với frame định vị theo template",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "postbuild": "node scripts/bump-version.mjs",
+    "prebuild": "node scripts/sync-backup-restore.mjs"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "dexie": "^4.4.7",
+    "dexie-react-hooks": "^4.2.0",
+    "jsqr": "^1.4.0",
+    "lucide-react": "^1.70.0",
+    "next": "^15.5.29",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}

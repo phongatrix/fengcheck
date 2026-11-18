@@ -1,6 +1,6 @@
 {
   "name": "cham-thi-webcam",
-  "version": "1.0.0.60",
+  "version": "1.0.0.61",
   "private": true,
   "description": "Chấm thi OMR bằng webcam — chụp phiếu bài thi với frame định vị theo template",
   "scripts": {

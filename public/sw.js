@@ -4,7 +4,7 @@
  * cached fallback (offline still opens the app shell).
  */
 
-const CACHE = "chambai-webcam-v55";
+const CACHE = "chambai-webcam-v56";
 const SHELL = [
   "/",
   "/scan",

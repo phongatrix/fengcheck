@@ -23,6 +23,14 @@ export const BACKUP_URL = `${BACKUP_DIR}/du-lieu-fengcheck.json`;
 /** Cờ sessionStorage: mỗi phiên chỉ kiểm tra phục hồi một lần. */
 export const RESTORE_FLAG = "fengcheck-restore-checked";
 
+/**
+ * localStorage giữ `exportedAt` của bản backup đã áp dụng. Khi deploy bản mới
+ * (exportedAt đổi) app đồng bộ thêm một lần — nhờ vậy bản deploy mới có hiệu
+ * lực ngay cả khi máy người dùng đã có dữ liệu cũ, mà vẫn không đụng dữ liệu
+ * người dùng tự tạo (gộp theo id, `bulkPut`).
+ */
+export const RESTORE_VERSION_KEY = "fengcheck-restore-version";
+
 /** Một ảnh phiếu nằm rời trong `public/backup/blobs/`. */
 export interface BlobFileRef {
   id: string;

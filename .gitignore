@@ -7,5 +7,6 @@ next-env.d.ts
 
 # Dữ liệu người dùng / biến môi trường — KHÔNG đưa lên git
 /backup/
+/public/backup/blobs/
 .env.local
 .vercel/

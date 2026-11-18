@@ -2,11 +2,12 @@
 
 /**
  * Tự phục hồi dữ liệu khi app mở trên origin MỚI (vd sau khi deploy Vercel):
- * DB trống + có file backup trong `/backup` → nạp lại toàn bộ bài thi, đáp án,
- * kết quả, ảnh phiếu. DB đã có dữ liệu → KHÔNG đụng vào.
+ * DB trống + có bộ asset trong `/backup` → nạp lại bài thi, mã đề, kết quả,
+ * mẫu phiếu và ảnh phiếu (ảnh tải lần lượt, hiện tiến trình).
+ * DB đã có dữ liệu → KHÔNG đụng vào.
  *
- * Mỗi phiên tab chỉ kiểm tra một lần (sessionStorage) để không fetch file
- * backup ~17MB mỗi lần mở trang. Lỗi đều nuốt — app vẫn chạy nếu thiếu backup.
+ * Mỗi phiên tab chỉ kiểm tra một lần (sessionStorage). Lỗi đều nuốt — app vẫn
+ * chạy bình thường nếu bản deploy không kèm dữ liệu.
  */
 
 import { useEffect, useState } from "react";
@@ -20,8 +21,7 @@ export default function DataRestore() {
 
     void (async () => {
       try {
-        const empty = await dbIsEmpty();
-        if (!empty) {
+        if (!(await dbIsEmpty())) {
           sessionStorage.setItem(RESTORE_FLAG, "1");
           return;
         }
@@ -30,18 +30,25 @@ export default function DataRestore() {
         if (!res.ok) return;
 
         const json = await res.json();
-        const { restored } = await restoreFromBackup(json);
+        const { restored } = await restoreFromBackup(json, (p) => {
+          // Chỉ báo khi có ảnh cần tải (bộ dữ liệu lớn mất vài chục giây).
+          if (p.blobsTotal > 0) {
+            setMsg(`Đang nạp dữ liệu: ${p.blobsDone}/${p.blobsTotal} ảnh phiếu…`);
+          }
+        });
         sessionStorage.setItem(RESTORE_FLAG, "1");
         console.info("[restore] Đã phục hồi dữ liệu từ bản sao lưu:", restored);
 
         const q = restored.quizzes ?? 0;
         const s = restored.scores ?? 0;
         if (q > 0 || s > 0) {
-          setMsg(`Đã tự động nạp dữ liệu mẫu: ${q} bài thi, ${s} bài chấm.`);
-          setTimeout(() => setMsg(null), 6000);
+          const img = restored.blobs ?? 0;
+          setMsg(`Đã nạp dữ liệu: ${q} bài thi, ${s} bài chấm${img ? `, ${img} ảnh phiếu` : ""}.`);
+          setTimeout(() => setMsg(null), 8000);
         }
       } catch (err) {
         console.warn("[restore] Bỏ qua phục hồi dữ liệu:", err);
+        setMsg(null);
       }
     })();
   }, []);

@@ -40,7 +40,11 @@ export default function SettingsPage() {
         throw new Error(`Không tìm thấy file sao lưu trên server (mã lỗi ${res.status}).`);
       }
       const json = await res.json();
-      const { restored } = await restoreFromBackup(json);
+      const { restored } = await restoreFromBackup(json, (p) => {
+        if (p.blobsTotal > 0) {
+          setMsg({ type: "success", text: `Đang phục hồi… ${p.blobsDone}/${p.blobsTotal} ảnh phiếu` });
+        }
+      });
       setMsg({
         type: "success",
         text: `Phục hồi thành công: ${restored.quizzes ?? 0} bài thi, ${restored.keys ?? 0} mã đề, ${restored.scores ?? 0} bài chấm, ${restored.blobs ?? 0} ảnh phiếu.`,

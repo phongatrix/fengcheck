@@ -6,7 +6,6 @@ next-env.d.ts
 .DS_Store
 
 # Dữ liệu người dùng / biến môi trường — KHÔNG đưa lên git
-backup/
-public/backup/
+/backup/
 .env.local
 .vercel/

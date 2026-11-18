@@ -1,3 +1,9 @@
-# .vercelignore — file hiện diện (chỉ chứa chú thích) để Vercel CLI KHÔNG áp
-# .gitignore khi upload: cần đưa public/backup/ lên bản deploy để app tự
-# phục hồi dữ liệu lần đầu truy cập.
+# File/thư mục không cần đưa lên Vercel (CLI).
+# LƯU Ý: có file này thì Vercel CLI KHÔNG áp .gitignore nữa — vì vậy phải
+# liệt kê tường minh ở đây; public/backup/ (file dữ liệu phục hồi) PHẢI được đưa lên.
+node_modules
+.next
+.git
+.vercel
+/backup
+tests

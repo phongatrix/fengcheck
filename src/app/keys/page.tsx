@@ -205,7 +205,10 @@ export default function KeysPage() {
         <p className="text-sm text-slate-400">Đang tải...</p>
       ) : quizzes.length === 0 ? (
         <div className="card p-8 text-center text-sm text-slate-500">
-          Chưa có bài thi nào. Bấm “Tạo bài thi” để bắt đầu.
+          <p className="mb-2">Chưa có bài thi nào. Bấm “Lưu bài thi” để bắt đầu.</p>
+          <Link href="/settings" className="text-brand-600 font-medium underline">
+            Hoặc vào Cài đặt để phục hồi dữ liệu mẫu từ server →
+          </Link>
         </div>
       ) : (
         <ul className="space-y-2">

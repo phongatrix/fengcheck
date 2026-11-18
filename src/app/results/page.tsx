@@ -213,7 +213,15 @@ export default function ResultsPage() {
 
       {sorted.length === 0 ? (
         <div className="card p-8 text-center text-sm text-slate-500">
-          Chưa có bản ghi nào. <Link href="/scan" className="text-brand-600">Chụp bài đầu tiên →</Link>
+          <p className="mb-2">
+            Chưa có bản ghi nào.{" "}
+            <Link href="/scan" className="text-brand-600 font-medium">
+              Chụp bài đầu tiên →
+            </Link>
+          </p>
+          <Link href="/settings" className="text-brand-600 font-medium underline">
+            Hoặc vào Cài đặt để phục hồi dữ liệu mẫu từ server →
+          </Link>
         </div>
       ) : (
         <div className="space-y-6">

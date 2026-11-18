@@ -25,15 +25,13 @@ export interface BackupFile {
   data: Record<string, unknown[]>;
 }
 
-/** true khi toàn bộ các bảng nghiệp vụ còn trống (app chưa được dùng). */
+/** true khi các bảng dữ liệu chính (bài thi, kết quả chấm) còn trống. */
 export async function dbIsEmpty(): Promise<boolean> {
-  const [q, k, s, t] = await Promise.all([
+  const [q, s] = await Promise.all([
     db.quizzes.count(),
-    db.keys.count(),
     db.scores.count(),
-    db.templates.count(),
   ]);
-  return q + k + s + t === 0;
+  return q === 0 && s === 0;
 }
 
 /** Giải mã base64 → mảng byte (ảnh phiếu trong bảng blobs). */
@@ -73,3 +71,50 @@ export async function restoreFromBackup(json: BackupFile): Promise<RestoreResult
   }
   return { restored };
 }
+
+/** Chuyển Uint8Array thành chuỗi base64 (chia chunk tránh tràn stack). */
+function bytesToB64(bytes: Uint8Array): string {
+  let bin = "";
+  const len = bytes.byteLength;
+  const chunk = 8192;
+  for (let i = 0; i < len; i += chunk) {
+    const sub = bytes.subarray(i, Math.min(i + chunk, len));
+    for (let j = 0; j < sub.length; j++) {
+      bin += String.fromCharCode(sub[j]);
+    }
+  }
+  return btoa(bin);
+}
+
+/** Xuất toàn bộ dữ liệu trong IndexedDB thành object BackupFile để tải về. */
+export async function exportBackup(): Promise<BackupFile> {
+  const [quizzes, keys, scores, templates, blobsRaw] = await Promise.all([
+    db.quizzes.toArray(),
+    db.keys.toArray(),
+    db.scores.toArray(),
+    db.templates.toArray(),
+    db.blobs.toArray(),
+  ]);
+
+  const blobs = blobsRaw.map((b) => ({
+    id: b.id,
+    name: b.name,
+    mime: b.mime,
+    data: bytesToB64(b.data),
+  }));
+
+  return {
+    app: "Feng Check",
+    dbName: "chambai-webcam",
+    dbVersion: 110,
+    exportedAt: new Date().toISOString(),
+    data: {
+      quizzes,
+      keys,
+      scores,
+      templates,
+      blobs,
+    },
+  };
+}
+
